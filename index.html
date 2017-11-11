@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DensityMap</title>
+    <script
+            src="https://code.jquery.com/jquery-3.2.1.min.js"
+            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+            crossorigin="anonymous"></script>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+</head>
+<body>
+
+<script>
+    Math.nrand = function() {
+        var x1, x2, rad, y1;
+        do {
+            x1 = 2 * this.random() - 1;
+            x2 = 2 * this.random() - 1;
+            rad = x1 * x1 + x2 * x2;
+        } while(rad >= 1 || rad == 0);
+        var c = this.sqrt(-2 * Math.log(rad) / rad);
+        return x1 * c;
+    };
+    function get_points(n_p, t) {
+        var result_points = [];
+        if (t == 0) {
+            for (var i = 0; i < n_p; i++) {
+                var x = Math.nrand();
+                var y = Math.nrand();
+            }
+            result_points.push([x, y]);
+        }
+        return result_points;
+    }
+    var n_points = 100;
+    var points_type = 0;//for normal distributed points
+    var type = 0;
+    var points = get_points(n_points, type);
+    console.log(points);
+</script>
+</body>
+</html>
