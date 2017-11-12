@@ -8,36 +8,48 @@
             integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
             crossorigin="anonymous"></script>
     <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="density_map.js"></script>
 </head>
 <body>
-
+<canvas id = "densitymap" width="600" height="600"></canvas>
 <script>
-    Math.nrand = function() {
-        var x1, x2, rad, y1;
-        do {
-            x1 = 2 * this.random() - 1;
-            x2 = 2 * this.random() - 1;
-            rad = x1 * x1 + x2 * x2;
-        } while(rad >= 1 || rad == 0);
-        var c = this.sqrt(-2 * Math.log(rad) / rad);
-        return x1 * c;
+    Math.nrand = function(ave, std_var) {
+        var u = 0, v = 0;
+        while(u === 0) u = Math.random(); //Converting [0,1) to (0,1)
+        while(v === 0) v = Math.random();
+        var st_nor = Math.sqrt( -2.0 * Math.log( u ) ) * Math.cos( 2.0 * Math.PI * v );
+        return st_nor * std_var + ave;
     };
-    function get_points(n_p, t) {
+    function get_points(n_p, t, width, height) {
         var result_points = [];
         if (t == 0) {
             for (var i = 0; i < n_p; i++) {
-                var x = Math.nrand();
-                var y = Math.nrand();
+                var x = -1;
+                var y = -1;
+                while (x < 0 || x >= width || y < 0 || y >= height) {
+                    x = Math.nrand(300, 110);
+                    y = Math.nrand(300, 110);
+                }
+                result_points.push([x, y]);
             }
-            result_points.push([x, y]);
         }
         return result_points;
     }
-    var n_points = 100;
+
+    var n_points = 1000;
     var points_type = 0;//for normal distributed points
     var type = 0;
-    var points = get_points(n_points, type);
+    var canvas = document.getElementById("densitymap");
+    width = canvas.width;
+    height = canvas.height;
+    var points = get_points(n_points, type, width, height);
     console.log(points);
+    var ctx = canvas.getContext("2d");
+    console.log(normalpdf(0, 0, 1));
+    function draw() {
+        draw_density_map(ctx, points, canvas, 3, [255, 0, 0]);
+    }
+    draw_density_map(ctx, points, canvas, 5, [255, 0, 0]);
 </script>
 </body>
 </html>
